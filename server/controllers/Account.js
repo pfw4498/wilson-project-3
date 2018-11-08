@@ -21,7 +21,6 @@ const changePass = (request, response) => {
 	
 	const oldPass = `${req.body.oldPass}`;
 	const newPass = `${req.body.newPass}`;
-	const newPass2 = `${req.body.newPass2}`;
 	
 	const currentUsername = req.session.account.username;
 	
@@ -32,8 +31,8 @@ const changePass = (request, response) => {
 			return res.json({ err });
 		}
 		
-		return Account.AccountModel.authenticate(doc.username, oldPass, (err, account) => {
-        	if (err || !account) {
+		return Account.AccountModel.authenticate(doc.username, oldPass, (errorMessage, account) => {
+        	if (errorMessage || !account) {
             	return res.status(401).json({ error: 'RAWR! Old password does not match!'});
         	}
         	
@@ -41,7 +40,7 @@ const changePass = (request, response) => {
 				Account.AccountModel.findOneAndUpdate(
 					{ username: currentUsername }, 
 					{ username: currentUsername, salt, password: hash },
-					(doc) => {
+					(document) => {
 						return res.json({ redirect: '/maker' });
 					}
 				);

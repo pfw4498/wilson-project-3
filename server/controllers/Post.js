@@ -45,7 +45,7 @@ const makePost = (req, res) => {
 };
 
 const getPosts = (request, response) => {
-	const req = request;
+	//const req = request;
 	const res = response;
 	
 	//return Post.PostModel.findByPoster(req.session.account._id, (err, docs) => {
