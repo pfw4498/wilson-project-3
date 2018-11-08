@@ -11,6 +11,45 @@ const logout = (req, res) => {
     res.redirect('/');
 };
 
+const changePassPage = (req, res) => {
+	res.render('changePass', { csrfToken: req.csrfToken() });
+};
+
+const changePass = (request, response) => {
+	const req = request;
+	const res = response;
+	
+	const oldPass = `${req.body.oldPass}`;
+	const newPass = `${req.body.newPass}`;
+	const newPass2 = `${req.body.newPass2}`;
+	
+	const currentUsername = req.session.account.username;
+	
+	//console.log(req.session.account);
+	
+	Account.AccountModel.findByUsername(currentUsername, (err, doc) => {
+		if (err) {
+			return res.json({ err });
+		}
+		
+		return Account.AccountModel.authenticate(doc.username, oldPass, (err, account) => {
+        	if (err || !account) {
+            	return res.status(401).json({ error: 'RAWR! Old password does not match!'});
+        	}
+        	
+			Account.AccountModel.generateHash(newPass, (salt, hash) => {
+				Account.AccountModel.findOneAndUpdate(
+					{ username: currentUsername }, 
+					{ username: currentUsername, salt, password: hash },
+					(doc) => {
+						return res.json({ redirect: '/maker' });
+					}
+				);
+    		});
+    	});
+	});
+};
+
 const login = (request, response) => {
     const req = request;
     const res = response;
@@ -93,3 +132,5 @@ module.exports.login = login;
 module.exports.logout = logout;
 module.exports.signup = signup;
 module.exports.getToken = getToken;
+module.exports.changePassPage = changePassPage;
+module.exports.changePass = changePass;

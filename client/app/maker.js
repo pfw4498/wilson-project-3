@@ -1,87 +1,86 @@
-const handleDomo = (e) => {
+const handlePost = (e) => {
 	e.preventDefault();
 	
 	$("#domoMessage").animate({width:'hide'},350);
 	
-	if ($("#domoName").val() == '' || $("#domoAge").val() == '') {
+	if ($("#postContent").val() == '') {
 		handleError("RAWR! All fields are recquired");
 		return false;
 	}
 	
-	sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function() {
-		loadDomosFromServer();
+	sendAjax('POST', $("#postForm").attr("action"), $("#postForm").serialize(), function() {
+		loadPostsFromServer();
 	});
 	
 	return false;
 };
 
-const DomoForm = (props) => {
+const PostForm = (props) => {
 	return (
-		<form id="domoForm"
-			onSubmit={handleDomo}
-			name="domoForm"
+		<form id="postForm"
+			onSubmit={handlePost}
+			name="postForm"
 			action="/maker"
 			method="POST"
 			className="domoForm"
 		>
-			<label htmlFor="name">Name: </label>
-			<input id="domoName" type="text" name="name" placeholder="Domo Name" />
-			<label htmlFor="age">Age: </label>
-			<input id="domoAge" type="text" name="age" placeholder="Domo Age" />
+			<label htmlFor="post">Post Content: </label>
+			<input id="postContent" type="text" name="post" placeholder="Type post here..." />
 			<input type="hidden" name="_csrf" value={props.csrf} />
-			<input className="makeDomoSubmit" type="submit" value="Make Domo" />
+			<input className="makeDomoSubmit" type="submit" value="Post to Feed" />
 		</form>
 	);
 };
 
-const DomoList = function(props) {
-	if (props.domos.length === 0) {
+const PostList = function(props) {
+	if (props.posts.length === 0) {
 		return (
 			<div className="domoList">
-				<h3 className="emptyDomo">No Domos Yet</h3>
+				<h3 className="emptyDomo">No Posts Yet</h3>
 			</div>
 		);
 	}
 	
-	const domoNodes = props.domos.map(function(domo) {
+	const postNodes = props.posts.map(function(post) {
 		return (
-			<div key={domo._id} className="domo">
+			<div key={post._id} className="domo">
 				<img src="/assets/img/domoface.jpeg" alt="domo face" className="domoFace" />
-				<h3 className="domoName"> Name: {domo.name} </h3>
-				<h3 className="domoAge"> Age: {domo.age}</h3>
+				<h3 className="domoName"> Posted By: {post.poster} </h3>
+				<h3 className="domoAge"> <b>Content: </b>{post.post}</h3>
+				<h5> Posted At: {post.postDate}</h5>
 			</div>
 		);
 	});
 	
 	return (
 		<div className="domoList">
-			{domoNodes}
+			{postNodes}
 		</div>
 	);
 };
 
-const loadDomosFromServer = () => {
-	sendAjax('GET', '/getDomos', null, (data) => {
+const loadPostsFromServer = () => {
+	sendAjax('GET', '/getPosts', null, (data) => {
 		ReactDOM.render(
-			<DomoList domos={data.domos} />, 
-			document.querySelector("#domos")
+			<PostList posts={data.posts} />, 
+			document.querySelector("#posts")
 		);
 	});
 };
 
 const setup = function(csrf) {
 	ReactDOM.render(
-		<DomoForm csrf={csrf} />, 
-		document.querySelector("#makeDomo")
+		<PostForm csrf={csrf} />, 
+		document.querySelector("#makePost")
 	);
 	
 	ReactDOM.render(
-		<DomoList domos={[]} />, 
-		document.querySelector("#domos")
+		<PostList posts={[]} />, 
+		document.querySelector("#posts")
 	);
 	
-	loadDomosFromServer();
-}
+	loadPostsFromServer();
+};
 
 const getToken = () => {
 	sendAjax('GET', '/getToken', null, (result) => {

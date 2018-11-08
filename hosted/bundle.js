@@ -1,79 +1,84 @@
 "use strict";
 
-var handleDomo = function handleDomo(e) {
+var handlePost = function handlePost(e) {
 	e.preventDefault();
 
 	$("#domoMessage").animate({ width: 'hide' }, 350);
 
-	if ($("#domoName").val() == '' || $("#domoAge").val() == '') {
+	if ($("#postContent").val() == '') {
 		handleError("RAWR! All fields are recquired");
 		return false;
 	}
 
-	sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function () {
-		loadDomosFromServer();
+	sendAjax('POST', $("#postForm").attr("action"), $("#postForm").serialize(), function () {
+		loadPostsFromServer();
 	});
 
 	return false;
 };
 
-var DomoForm = function DomoForm(props) {
+var PostForm = function PostForm(props) {
 	return React.createElement(
 		"form",
-		{ id: "domoForm",
-			onSubmit: handleDomo,
-			name: "domoForm",
+		{ id: "postForm",
+			onSubmit: handlePost,
+			name: "postForm",
 			action: "/maker",
 			method: "POST",
 			className: "domoForm"
 		},
 		React.createElement(
 			"label",
-			{ htmlFor: "name" },
-			"Name: "
+			{ htmlFor: "post" },
+			"Post Content: "
 		),
-		React.createElement("input", { id: "domoName", type: "text", name: "name", placeholder: "Domo Name" }),
-		React.createElement(
-			"label",
-			{ htmlFor: "age" },
-			"Age: "
-		),
-		React.createElement("input", { id: "domoAge", type: "text", name: "age", placeholder: "Domo Age" }),
+		React.createElement("input", { id: "postContent", type: "text", name: "post", placeholder: "Type post here..." }),
 		React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
-		React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Make Domo" })
+		React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Post to Feed" })
 	);
 };
 
-var DomoList = function DomoList(props) {
-	if (props.domos.length === 0) {
+var PostList = function PostList(props) {
+	if (props.posts.length === 0) {
 		return React.createElement(
 			"div",
 			{ className: "domoList" },
 			React.createElement(
 				"h3",
 				{ className: "emptyDomo" },
-				"No Domos Yet"
+				"No Posts Yet"
 			)
 		);
 	}
 
-	var domoNodes = props.domos.map(function (domo) {
+	var postNodes = props.posts.map(function (post) {
 		return React.createElement(
 			"div",
-			{ key: domo._id, className: "domo" },
+			{ key: post._id, className: "domo" },
 			React.createElement("img", { src: "/assets/img/domoface.jpeg", alt: "domo face", className: "domoFace" }),
 			React.createElement(
 				"h3",
 				{ className: "domoName" },
-				" Name: ",
-				domo.name,
+				" Posted By: ",
+				post.poster,
 				" "
 			),
 			React.createElement(
 				"h3",
 				{ className: "domoAge" },
-				" Age: ",
-				domo.age
+				" ",
+				React.createElement(
+					"b",
+					null,
+					"Content: "
+				),
+				post.post
+			),
+			React.createElement(
+				"h5",
+				null,
+				" Posted At: ",
+				post.postDate
 			)
 		);
 	});
@@ -81,22 +86,22 @@ var DomoList = function DomoList(props) {
 	return React.createElement(
 		"div",
 		{ className: "domoList" },
-		domoNodes
+		postNodes
 	);
 };
 
-var loadDomosFromServer = function loadDomosFromServer() {
-	sendAjax('GET', '/getDomos', null, function (data) {
-		ReactDOM.render(React.createElement(DomoList, { domos: data.domos }), document.querySelector("#domos"));
+var loadPostsFromServer = function loadPostsFromServer() {
+	sendAjax('GET', '/getPosts', null, function (data) {
+		ReactDOM.render(React.createElement(PostList, { posts: data.posts }), document.querySelector("#posts"));
 	});
 };
 
 var setup = function setup(csrf) {
-	ReactDOM.render(React.createElement(DomoForm, { csrf: csrf }), document.querySelector("#makeDomo"));
+	ReactDOM.render(React.createElement(PostForm, { csrf: csrf }), document.querySelector("#makePost"));
 
-	ReactDOM.render(React.createElement(DomoList, { domos: [] }), document.querySelector("#domos"));
+	ReactDOM.render(React.createElement(PostList, { posts: [] }), document.querySelector("#posts"));
 
-	loadDomosFromServer();
+	loadPostsFromServer();
 };
 
 var getToken = function getToken() {
