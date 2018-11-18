@@ -19,7 +19,7 @@ const makePost = (req, res) => {
     }
     
 	const today = new Date();
-	//today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+	today.setHours(today.getHours() - 5);
 	
     const postData = {
         post: req.body.post,
