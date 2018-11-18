@@ -13,8 +13,10 @@
     "buildAppBundle": "babel ./client/app ./client/helper --presets react --out-file ./hosted /bundle.js",
     "watchLoginBundle": "babel --watch ./client/login ./client/helper --presets react --out-file ./hosted/loginBundle.js",
     "watchAppBundle": "babel --watch ./client/app ./client/helper --presets react --out-file ./hosted/bundle.js",
-	"buildChangeBundle": "babel ./client/change --presets react --out-file ./hosted/changeBundle.js",
-	"watchChangeBundle": "babel --watch ./client/change --presets react --out-file ./hosted/changeBundle.js",
+    "buildChangeBundle": "babel ./client/change --presets react --out-file ./hosted/changeBundle.js",
+    "watchChangeBundle": "babel --watch ./client/change --presets react --out-file ./hosted/changeBundle.js",
+    "buildSass": "node-sass --include-path scss ./scss/main.scss ./hosted/style.css",
+    "watchSass": "node-sass --watch --include-path scss ./scss/main.scss ./hosted/style.css",
     "nodemon": "nodemon --watch ./server ./server/app.js",
     "start": "node ./server/app.js",
     "pretest": "eslint ./server --fix",
@@ -26,7 +28,7 @@
     "Redis",
     "Login"
   ],
-  "author": "Cody Van De Mark",
+  "author": "Parker Wilson",
   "license": "Apache 2.0",
   "dependencies": {
     "body-parser": "^1.15.0",
@@ -49,6 +51,7 @@
     "eslint": "^3.0.0",
     "eslint-config-airbnb": "^9.0.1",
     "eslint-plugin-import": "^1.10.1",
+    "node-sass": "^4.5.2",
     "nodemon": "^1.11.0"
   }
 }

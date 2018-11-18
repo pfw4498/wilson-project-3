@@ -4,7 +4,7 @@ const handlePost = (e) => {
 	$("#domoMessage").animate({width:'hide'},350);
 	
 	if ($("#postContent").val() == '') {
-		handleError("RAWR! All fields are recquired");
+		handleError("A post can't be empty");
 		return false;
 	}
 	
@@ -22,12 +22,13 @@ const PostForm = (props) => {
 			name="postForm"
 			action="/maker"
 			method="POST"
-			className="domoForm"
+			className="postForm"
 		>
 			<label htmlFor="post">Post Content: </label>
-			<input id="postContent" type="text" name="post" placeholder="Type post here..." />
+			<textarea id="postContent" name="post" rows="6" cols="50" maxLength="280" placeholder="Type post here..."></textarea>
 			<input type="hidden" name="_csrf" value={props.csrf} />
-			<input className="makeDomoSubmit" type="submit" value="Post to Feed" />
+			<input className="makePostSubmit" type="submit" value="Post to Feed" />
+			<label id="charLengthLabel">Max Chars: 280</label>
 		</form>
 	);
 };
@@ -35,25 +36,29 @@ const PostForm = (props) => {
 const PostList = function(props) {
 	if (props.posts.length === 0) {
 		return (
-			<div className="domoList">
-				<h3 className="emptyDomo">No Posts Yet</h3>
+			<div className="postList">
+				<h3 className="emptyPost">No Posts Yet</h3>
 			</div>
 		);
 	}
 	
 	const postNodes = props.posts.map(function(post) {
 		return (
-			<div key={post._id} className="domo">
-				<img src="/assets/img/domoface.jpeg" alt="domo face" className="domoFace" />
-				<h3 className="domoName"> Posted By: {post.poster} </h3>
-				<h3 className="domoAge"> <b>Content: </b>{post.post}</h3>
+			<div key={post._id} className="post">
+				<div id="postTitle">
+					<img src="/assets/img/thoughtBubble.png" alt="post icon" className="domoFace" />
+					<h3 className="postName"> Posted By: {post.poster} </h3>
+				</div><br />
+				<div id="postedContent">
+					<h3 className="postContent">{post.post}</h3>
+				</div><br />
 				<h5> Posted At: {post.postDate}</h5>
 			</div>
 		);
 	});
 	
 	return (
-		<div className="domoList">
+		<div className="postList">
 			{postNodes}
 		</div>
 	);

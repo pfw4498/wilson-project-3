@@ -6,17 +6,17 @@ var handleChangePass = function handleChangePass(e) {
 	$("#domoMessage").animate({ width: 'hide' }, 350);
 
 	if ($("#oldPass").val() === '' || $("#newPass").val() === '' || $('#newPass2').val() === '') {
-		handleError("RAWR! All fields are required");
+		handleError("All fields are required");
 		return false;
 	}
 
 	if ($("#newPass").val() !== $("#newPass2").val()) {
-		handleError("RAWR! Passwords do not match");
+		handleError("Passwords do not match");
 		return false;
 	}
 
 	if ($("#oldPass").val() === $("#newPass").val() || $("#oldPass").val() === $('#newPass2').val()) {
-		handleError("RAWR! Password hasn't changed!");
+		handleError("Password hasn't changed!");
 		return false;
 	}
 
@@ -41,20 +41,23 @@ var ChangePassWindow = function ChangePassWindow(props) {
 			"Old Password: "
 		),
 		React.createElement("input", { id: "oldPass", type: "password", name: "oldPass", placeholder: "Old Password" }),
+		React.createElement("br", null),
 		React.createElement(
 			"label",
 			{ htmlFor: "newPass" },
 			"New Password: "
 		),
 		React.createElement("input", { id: "newPass", type: "password", name: "newPass", placeholder: "New Password" }),
+		React.createElement("br", null),
 		React.createElement(
 			"label",
 			{ htmlFor: "newPass2" },
 			"Retype New Password: "
 		),
 		React.createElement("input", { id: "newPass2", type: "password", name: "newPass2", placeholder: "Retype New Password" }),
+		React.createElement("br", null),
 		React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
-		React.createElement("input", { className: "formSubmit", type: "submit", value: "Change Password" })
+		React.createElement("input", { id: "changePassSubmit", type: "submit", value: "Change Password" })
 	);
 };
 

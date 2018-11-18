@@ -6,7 +6,7 @@ var handlePost = function handlePost(e) {
 	$("#domoMessage").animate({ width: 'hide' }, 350);
 
 	if ($("#postContent").val() == '') {
-		handleError("RAWR! All fields are recquired");
+		handleError("A post can't be empty");
 		return false;
 	}
 
@@ -25,16 +25,21 @@ var PostForm = function PostForm(props) {
 			name: "postForm",
 			action: "/maker",
 			method: "POST",
-			className: "domoForm"
+			className: "postForm"
 		},
 		React.createElement(
 			"label",
 			{ htmlFor: "post" },
 			"Post Content: "
 		),
-		React.createElement("input", { id: "postContent", type: "text", name: "post", placeholder: "Type post here..." }),
+		React.createElement("textarea", { id: "postContent", name: "post", rows: "6", cols: "50", maxLength: "280", placeholder: "Type post here..." }),
 		React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
-		React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Post to Feed" })
+		React.createElement("input", { className: "makePostSubmit", type: "submit", value: "Post to Feed" }),
+		React.createElement(
+			"label",
+			{ id: "charLengthLabel" },
+			"Max Chars: 280"
+		)
 	);
 };
 
@@ -42,10 +47,10 @@ var PostList = function PostList(props) {
 	if (props.posts.length === 0) {
 		return React.createElement(
 			"div",
-			{ className: "domoList" },
+			{ className: "postList" },
 			React.createElement(
 				"h3",
-				{ className: "emptyDomo" },
+				{ className: "emptyPost" },
 				"No Posts Yet"
 			)
 		);
@@ -54,26 +59,30 @@ var PostList = function PostList(props) {
 	var postNodes = props.posts.map(function (post) {
 		return React.createElement(
 			"div",
-			{ key: post._id, className: "domo" },
-			React.createElement("img", { src: "/assets/img/domoface.jpeg", alt: "domo face", className: "domoFace" }),
+			{ key: post._id, className: "post" },
 			React.createElement(
-				"h3",
-				{ className: "domoName" },
-				" Posted By: ",
-				post.poster,
-				" "
-			),
-			React.createElement(
-				"h3",
-				{ className: "domoAge" },
-				" ",
+				"div",
+				{ id: "postTitle" },
+				React.createElement("img", { src: "/assets/img/thoughtBubble.png", alt: "post icon", className: "domoFace" }),
 				React.createElement(
-					"b",
-					null,
-					"Content: "
-				),
-				post.post
+					"h3",
+					{ className: "postName" },
+					" Posted By: ",
+					post.poster,
+					" "
+				)
 			),
+			React.createElement("br", null),
+			React.createElement(
+				"div",
+				{ id: "postedContent" },
+				React.createElement(
+					"h3",
+					{ className: "postContent" },
+					post.post
+				)
+			),
+			React.createElement("br", null),
 			React.createElement(
 				"h5",
 				null,
@@ -85,7 +94,7 @@ var PostList = function PostList(props) {
 
 	return React.createElement(
 		"div",
-		{ className: "domoList" },
+		{ className: "postList" },
 		postNodes
 	);
 };

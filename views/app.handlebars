@@ -8,20 +8,32 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.6.2/remarkable.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Concert+One" rel="stylesheet">
   <link rel="shortcut icon" href="/assets/img/favicon.png"/>
   <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
 </head>
 <body>
+	<div id="appTitle"><h1>Thought Poster!</h1><h4><i>"A place to share what's on your mind"</i></h4></div>
   <nav><a href="/login"><img id="logo" src="/assets/img/face.png" alt="face logo"/></a>
     <div class="navlink"><a href="/logout">Log out</a></div>
 	<div class="navlink"><a id="changePassButton" href="/changePassPage">Change Password</a></div>
   </nav>
   <section id="makePost">
   </section>
-  <section id="posts">
-  </section>
-  <div id="domoMessage"><img id="speech" src="/assets/img/speech.png" alt="speech box"/>
-    <h3><span id="errorMessage"></span></h3><img id="domo" src="assets/img/domo.png" alt="domo"/>
+  <div id="wrapper">
+	<div id="leftAd">
+		<p><b>Advertisement</b></p>
+	</div>
+	<div id="leftAd" style="float: right;">
+		<p><b>Advertisement</b></p>
+	</div>
+  	<section id="posts">
+  	</section>
+  </div>
+  <div id="domoMessage">
+    <h3><span id="errorMessage"></span></h3>
   </div>
   <script src="/assets/bundle.js"></script>
 </body>
