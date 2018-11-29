@@ -78,12 +78,11 @@ const searchPosts = (request, response) => {
 	
 	const search = req.body.search;
 	
-	return Post.PostModel.find({post: {"$regex": search, "$options": "i"}}).sort({_id: -1}).exec((err, docs) => {
+	return Post.PostModel.find({post:{"$regex":search,"$options":"i"}}).sort({_id:-1}).exec((err,docs) => {
 		if (err) {
 			console.log(err);
 			return res.status(400).json({ error: 'Could Not Get Search Results'});
 		}
-		
 		return res.json({ posts: docs });
 	});
 };
