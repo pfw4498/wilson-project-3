@@ -22,7 +22,7 @@ const makePost = (req, res) => {
 	today.setHours(today.getHours() - 5);
 	
     const postData = {
-        post: req.body.post,
+        post: req.body.post.toString("utf8"),
         poster: req.session.account.username,
         postDate: today.toLocaleString('en-US'),
     };
@@ -58,10 +58,30 @@ const getPosts = (request, response) => {
 	//	return res.json({ posts: docs });
 	//});
 	
-	return Post.PostModel.find({}, (err, docs) => {
+	return Post.PostModel.find({}).sort({_id: -1}).exec((err, docs) => {
 		if (err) {
 			console.log(err);
-			return res.status(400).json({ error: 'An Error Occurred'});
+			return res.status(400).json({ error: 'Could Not Get Posts'});
+		}
+		
+		return res.json({ posts: docs });
+	});
+};
+
+const searchPosts = (request, response) => {
+	const req = request;
+	const res = response;
+	
+	if (!req.body.search) {
+		return res.status(400).json({ error: 'Search Cannot Be Empty'});
+	}
+	
+	const search = req.body.search;
+	
+	return Post.PostModel.find({post: {"$regex": search, "$options": "i"}}).sort({_id: -1}).exec((err, docs) => {
+		if (err) {
+			console.log(err);
+			return res.status(400).json({ error: 'Could Not Get Search Results'});
 		}
 		
 		return res.json({ posts: docs });
@@ -71,3 +91,4 @@ const getPosts = (request, response) => {
 module.exports.makerPage = makerPage;
 module.exports.getPosts = getPosts;
 module.exports.make = makePost;
+module.exports.search = searchPosts;
