@@ -12,6 +12,14 @@ h5 {
   float: right;
   margin-top: -20px; }
 
+#searchContent {
+  width: 450px; }
+
+select {
+  float: left;
+  margin-left: -5px;
+  margin-top: 3px; }
+
 #appTitle {
   background-color: #5387db;
   padding: 15px;
@@ -63,9 +71,30 @@ nav:nth-child(1) {
   transition: background-color 0.8s ease;
   background-color: #66bdff; }
 
-#charLengthLabel {
+.navlinkCurrent {
+  padding: 5px;
+  padding-top: 12px;
+  padding-left: 20px;
+  color: white;
+  font-size: 1.3em;
+  float: left; }
+
+.navlinkCurrent a, .navlinkCurrent a:link, .navlinkCurrent a:visited, .navlinkCurrent a:hover, .navlinkCurrent a:active {
+  color: #bc0300;
+  text-decoration: none;
+  padding: 5px;
+  border-radius: 4px;
+  background-color: #00578c;
+  transition: background-color 0.4s ease; }
+
+.navlinkCurrent a:hover {
+  transition: background-color 0.8s ease;
+  background-color: #66bdff; }
+
+#charLengthLabelSearch {
   font-size: 0.8em;
-  margin-top: 5px; }
+  margin-top: 135px;
+  margin-left: -560px; }
 
 .postForm {
   border: 4px solid white;
@@ -326,7 +355,8 @@ nav:nth-child(1) {
   font-size: 0.8em;
   margin-top: 60px;
   background-color: #00578c;
-  color: white; }
+  color: white;
+  border: 2px solid white; }
 
 #postList {
   width: 60%; }
@@ -379,14 +409,35 @@ h3.postContent {
   font-weight: bold;
   padding-right: 40px;
   padding-left: 10px;
-  font-size: 1.5em;
-  border: 1px solid #acace5; }
+  font-size: 1.5em; }
 
 .post:first-child {
   margin-top: 10px; }
 
 .post:last-child {
   margin-bottom: 10px; }
+
+#imagePost {
+  width: 320px;
+  margin-left: -30px;
+  margin-top: 3px;
+  font-family: "Roboto Slab"; }
+
+#imagePostLabel {
+  float: left;
+  width: 200px; }
+
+#charLengthLabel {
+  font-size: 0.8em;
+  margin-top: 10px;
+  margin-right: 100px;
+  float: right; }
+
+#makePostSubmit {
+  margin-top: -50px; }
+
+.postImage {
+  max-width: 100%; }
 
 /* The Modal (background) */
 .modal {

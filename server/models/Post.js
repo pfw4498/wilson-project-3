@@ -10,10 +10,13 @@ const setPost = (post) => _.escape(post).trim();
 const PostSchema = new mongoose.Schema({
     post: {
         type: String,
-        required: true,
         trim: true,
         set: setPost,
     },
+	
+	image: {
+		type: String,
+	},
     
     poster: {
         type: String,

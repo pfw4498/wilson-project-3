@@ -3,7 +3,7 @@ const handlePost = (e) => {
 	
 	$("#domoMessage").animate({width:'hide'},350);
 	
-	if ($("#postContent").val() == '') {
+	if ($("#postContent").val() == '' && $("#imagePost").val() == '') {
 		handleError("A post can't be empty");
 		return false;
 	}
@@ -47,8 +47,10 @@ const PostForm = (props) => {
 		>
 			<label htmlFor="post">Post Content: </label>
 			<textarea id="postContent" name="post" rows="6" cols="50" maxLength="280" placeholder="Type post here..."></textarea>
+			<label id="imagePostLabel" htmlFor="image">Image URL (Optional): </label>
+			<input id="imagePost" type="text" name="image" placeholder="Image URL..." />
 			<input type="hidden" name="_csrf" value={props.csrf} />
-			<input className="makePostSubmit" type="submit" value="Post to Feed" onClick={closeModal}/>
+			<input id="makePostSubmit" className="makePostSubmit" type="submit" value="Post to Feed" onClick={closeModal}/>
 			<label id="charLengthLabel">Max Chars: 280</label>
 		</form>
 	);
@@ -65,9 +67,16 @@ const SearchForm = (props) => {
 		>
 			<label htmlFor="search">Search for Content: </label>
 			<textarea id="searchContent" name="search" rows="6" cols="50" maxLength="280" placeholder="Type search here..."></textarea>
+			<label htmlFor="limit">Result Count: </label>
+			<select id="perPageSelect" name="limit" form="searchForm">
+				<option value="5">5</option>
+				<option value="10">10</option>
+				<option value="20">20</option>
+				<option value="50">50</option>
+			</select>
 			<input type="hidden" name="_csrf" value={props.csrf} />
 			<input className="makePostSubmit" type="submit" value="Search Posts" onClick={closeModal2}/>
-			<label id="charLengthLabel">Max Chars: 280</label>
+			<label id="charLengthLabelSearch">Max Chars: 280</label>
 		</form>
 	);
 };
@@ -82,18 +91,39 @@ const PostList = function(props) {
 	}
 	
 	const postNodes = props.posts.map(function(post) {
-		return (
+		//Replace those strange special characters with their actual characters
+		const fixedPost = post.post.replace(/&#x27;/g, "'").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+		
+		if (post.image) {
+			return (
 			<div key={post._id} className="post">
 				<div id="postTitle">
 					<img src="/assets/img/thoughtBubble.png" alt="post icon" className="domoFace" />
 					<h3 className="postName"> Posted By: {post.poster} </h3>
 				</div><br />
 				<div id="postedContent">
-					<h3 className="postContent">{post.post}</h3>
+					<img className="postImage" src={post.image} alt="Can't Find Image" />
+					<h3 className="postContent">{fixedPost}</h3>
 				</div><br />
 				<h5> Posted At: {post.postDate}</h5>
 			</div>
-		);
+			);
+		}
+		else {
+			return (
+			<div key={post._id} className="post">
+				<div id="postTitle">
+					<img src="/assets/img/thoughtBubble.png" alt="post icon" className="domoFace" />
+					<h3 className="postName"> Posted By: {post.poster} </h3>
+				</div><br />
+				<div id="postedContent">
+					<h3 className="postContent">{fixedPost}</h3>
+				</div><br />
+				<h5> Posted At: {post.postDate}</h5>
+			</div>
+			);
+		}
+		
 	});
 	
 	return (
@@ -103,17 +133,29 @@ const PostList = function(props) {
 	);
 };
 
-const loadPostsFromServer = () => {
-	sendAjax('GET', '/getPosts', null, (data) => {
-		ReactDOM.render(
-			<PostList posts={data.posts} />, 
-			document.querySelector("#posts")
-		);
-	});
+const Navigation = () => {
+	return (
+		<div>
+			<a href="/login"><img id="logo" src="/assets/img/face.png" alt="face logo"/></a>
+    		<div className="navlink"><a href="/logout">Log out</a></div>
+			<div className="navlink"><a id="changePassButton" href="/changePassPage">Change Password</a>
+			</div>
+			<div className="navlinkCurrent"><a id="postFeedButton" href="/maker">Post Feed</a></div>
+		</div>
+	);
 };
 
-const loadSearchFromServer = () => {
-	sendAjax('POST', '/search', null, (data) => {
+const TitleSpace = () => {
+	return (
+		<div id="appTitle">
+			<h1>Thought Poster!</h1>
+			<h4><i>"A place to share what's on your mind"</i></h4>
+		</div>
+	);
+};
+
+const loadPostsFromServer = () => {
+	sendAjax('GET', '/getPosts', null, (data) => {
 		ReactDOM.render(
 			<PostList posts={data.posts} />, 
 			document.querySelector("#posts")
@@ -175,6 +217,16 @@ const setup = function(csrf) {
 	ReactDOM.render(
 		<PostList posts={[]} />, 
 		document.querySelector("#posts")
+	);
+	
+	ReactDOM.render(
+		<Navigation />,
+		document.querySelector("#navigation")
+	);
+	
+	ReactDOM.render(
+		<TitleSpace />,
+		document.querySelector("#titleSpace")
 	);
 	
 	loadPostsFromServer();

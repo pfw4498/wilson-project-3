@@ -14,18 +14,31 @@ const makerPage = (req, res) => {
 };
 
 const makePost = (req, res) => {
-    if (!req.body.post) {
+    if (!req.body.post && !req.body.image) {
         return res.status(400).json({ error: 'Posts must have content'});
     }
     
 	const today = new Date();
 	today.setHours(today.getHours() - 5);
 	
-    const postData = {
-        post: req.body.post.toString("utf8"),
-        poster: req.session.account.username,
-        postDate: today.toLocaleString('en-US'),
-    };
+	let postData = {};
+	
+    if (req.body.image) {
+		postData = {
+    	    post: req.body.post.toString("utf8"),
+			image: req.body.image,
+    	    poster: req.session.account.username,
+    	    postDate: today.toLocaleString('en-US'),
+    	};
+	}
+	else {
+		postData = {
+    	    post: req.body.post.toString("utf8"),
+			image: "",
+    	    poster: req.session.account.username,
+    	    postDate: today.toLocaleString('en-US'),
+    	};
+	}
     
     const newPost = new Post.PostModel(postData);
     
@@ -48,15 +61,6 @@ const makePost = (req, res) => {
 const getPosts = (request, response) => {
 	//const req = request;
 	const res = response;
-	
-	//return Post.PostModel.findByPoster(req.session.account._id, (err, docs) => {
-	//	if (err) {
-	//		console.log(err);
-	//		return res.status(400).json({ error: 'An error occurred' });
-	//	}
-	//	
-	//	return res.json({ posts: docs });
-	//});
 	
 	return Post.PostModel.find({}).sort({_id: -1}).exec((err, docs) => {
 		if (err) {
@@ -82,11 +86,11 @@ const searchPosts = (request, response) => {
 		post: {
 			"$regex":search,
 			"$options":"i"
-		} 
-	}).sort({_id:-1}).exec((err,docs) => {
+		}
+	}, null, { limit: parseInt(req.body.limit) }).sort({_id:-1}).exec((err,docs) => {
 		if (err) {
 			console.log(err);
-			return res.status(400).json({ error: 'Could Not Get Search Results'});
+			return res.status(400).json({ error: 'Could Not Return Search Results'});
 		}
 		return res.json({ posts: docs });
 	});

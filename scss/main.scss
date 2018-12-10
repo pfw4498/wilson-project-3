@@ -4,6 +4,7 @@ $bgColorDark: #5387db;
 $titleFont: 'Dosis';
 $otherFont: 'Roboto Slab';
 $logoFont: 'Concert One';
+$redColor: #bc0300;
 
 html, body {
     height: 100%;
@@ -19,6 +20,16 @@ h5 {
 	font-style: normal;
 	float: right;
 	margin-top: -20px;
+}
+
+#searchContent {
+	width: 450px;
+}
+
+select {
+	float: left;
+	margin-left: -5px;
+	margin-top: 3px;
 }
 
 #appTitle {
@@ -81,9 +92,33 @@ nav:nth-child(1) {
     background-color: #66bdff;
 }
 
-#charLengthLabel {
+.navlinkCurrent {
+    padding: 5px;
+    padding-top: 12px;
+    padding-left: 20px;
+    color: white;
+    font-size: 1.3em;
+    float: left;
+}
+
+.navlinkCurrent a, .navlinkCurrent a:link, .navlinkCurrent a:visited, .navlinkCurrent a:hover, .navlinkCurrent a:active {
+    color: $redColor;
+    text-decoration: none;
+    padding: 5px;
+    border-radius: 4px;
+    background-color: $bgColor;
+    transition: background-color 0.4s ease;
+}
+
+.navlinkCurrent a:hover {
+    transition: background-color 0.8s ease;
+    background-color: #66bdff;
+}
+
+#charLengthLabelSearch {
 	font-size: 0.8em;
-	margin-top: 5px;
+	margin-top: 135px;
+	margin-left: -560px;
 }
 
 .postForm {
@@ -387,6 +422,7 @@ nav:nth-child(1) {
 	margin-top: 60px;
 	background-color: $bgColor;
 	color: white;
+	border: 2px solid white;
 }
 
 #postList {
@@ -448,7 +484,6 @@ h3.postContent {
     padding-right: 40px;
 	padding-left: 10px;
     font-size: 1.5em;
-	border: 1px solid $colorVar;
 }
 
 .post:first-child {
@@ -457,6 +492,33 @@ h3.postContent {
 
 .post:last-child {
     margin-bottom:10px;
+}
+
+#imagePost {
+	width: 320px;
+	margin-left: -30px;
+	margin-top: 3px;
+	font-family: $otherFont;
+}
+
+#imagePostLabel {
+	float: left;
+	width: 200px;
+}
+
+#charLengthLabel {
+	font-size: 0.8em;
+	margin-top: 10px;
+	margin-right: 100px;
+	float: right;
+}
+
+#makePostSubmit {
+	margin-top: -50px;
+}
+
+.postImage {
+	max-width: 100%;
 }
 
 //Modal CSS - reference to: https://www.w3schools.com/howto/howto_css_modals.asp

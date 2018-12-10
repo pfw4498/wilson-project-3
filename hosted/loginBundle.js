@@ -99,6 +99,27 @@ var SignupWindow = function SignupWindow(props) {
 	);
 };
 
+var TitleSpace = function TitleSpace() {
+	return React.createElement(
+		"div",
+		{ id: "appTitle" },
+		React.createElement(
+			"h1",
+			null,
+			"Thought Poster!"
+		),
+		React.createElement(
+			"h4",
+			null,
+			React.createElement(
+				"i",
+				null,
+				"\"A place to share what's on your mind\""
+			)
+		)
+	);
+};
+
 var createLoginWindow = function createLoginWindow(csrf) {
 	ReactDOM.render(React.createElement(LoginWindow, { csrf: csrf }), document.querySelector("#content"));
 };
@@ -124,6 +145,8 @@ var setup = function setup(csrf) {
 	});
 
 	createLoginWindow(csrf);
+
+	ReactDOM.render(React.createElement(TitleSpace, null), document.querySelector("#titleSpace"));
 };
 
 var getToken = function getToken() {

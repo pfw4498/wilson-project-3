@@ -61,8 +61,72 @@ var ChangePassWindow = function ChangePassWindow(props) {
 	);
 };
 
+var Navigation = function Navigation() {
+	return React.createElement(
+		"div",
+		null,
+		React.createElement(
+			"a",
+			{ href: "/login" },
+			React.createElement("img", { id: "logo", src: "/assets/img/face.png", alt: "face logo" })
+		),
+		React.createElement(
+			"div",
+			{ className: "navlink" },
+			React.createElement(
+				"a",
+				{ href: "/logout" },
+				"Log out"
+			)
+		),
+		React.createElement(
+			"div",
+			{ className: "navlinkCurrent" },
+			React.createElement(
+				"a",
+				{ id: "changePassButton", href: "/changePassPage" },
+				"Change Password"
+			)
+		),
+		React.createElement(
+			"div",
+			{ className: "navlink" },
+			React.createElement(
+				"a",
+				{ id: "postFeedButton", href: "/maker" },
+				"Post Feed"
+			)
+		)
+	);
+};
+
+var TitleSpace = function TitleSpace() {
+	return React.createElement(
+		"div",
+		{ id: "appTitle" },
+		React.createElement(
+			"h1",
+			null,
+			"Thought Poster!"
+		),
+		React.createElement(
+			"h4",
+			null,
+			React.createElement(
+				"i",
+				null,
+				"\"A place to share what's on your mind\""
+			)
+		)
+	);
+};
+
 var setup = function setup(csrf) {
 	ReactDOM.render(React.createElement(ChangePassWindow, { csrf: csrf }), document.querySelector("#content"));
+
+	ReactDOM.render(React.createElement(Navigation, null), document.querySelector("#navigation"));
+
+	ReactDOM.render(React.createElement(TitleSpace, null), document.querySelector("#titleSpace"));
 };
 
 var getToken = function getToken() {

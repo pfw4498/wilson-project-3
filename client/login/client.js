@@ -74,6 +74,15 @@ const SignupWindow = (props) => {
 	);
 };
 
+const TitleSpace = () => {
+	return (
+		<div id="appTitle">
+			<h1>Thought Poster!</h1>
+			<h4><i>"A place to share what's on your mind"</i></h4>
+		</div>
+	);
+};
+
 const createLoginWindow = (csrf) => {
 	ReactDOM.render(
 		<LoginWindow csrf={csrf} />,
@@ -105,6 +114,11 @@ const setup = (csrf) => {
 	});
 	
 	createLoginWindow(csrf);
+	
+	ReactDOM.render(
+		<TitleSpace />,
+		document.querySelector("#titleSpace")
+	);
 };
 
 const getToken = () => {

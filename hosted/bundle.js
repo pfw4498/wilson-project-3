@@ -5,7 +5,7 @@ var handlePost = function handlePost(e) {
 
 	$("#domoMessage").animate({ width: 'hide' }, 350);
 
-	if ($("#postContent").val() == '') {
+	if ($("#postContent").val() == '' && $("#imagePost").val() == '') {
 		handleError("A post can't be empty");
 		return false;
 	}
@@ -51,8 +51,14 @@ var PostForm = function PostForm(props) {
 			"Post Content: "
 		),
 		React.createElement("textarea", { id: "postContent", name: "post", rows: "6", cols: "50", maxLength: "280", placeholder: "Type post here..." }),
+		React.createElement(
+			"label",
+			{ id: "imagePostLabel", htmlFor: "image" },
+			"Image URL (Optional): "
+		),
+		React.createElement("input", { id: "imagePost", type: "text", name: "image", placeholder: "Image URL..." }),
 		React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
-		React.createElement("input", { className: "makePostSubmit", type: "submit", value: "Post to Feed", onClick: closeModal }),
+		React.createElement("input", { id: "makePostSubmit", className: "makePostSubmit", type: "submit", value: "Post to Feed", onClick: closeModal }),
 		React.createElement(
 			"label",
 			{ id: "charLengthLabel" },
@@ -77,11 +83,40 @@ var SearchForm = function SearchForm(props) {
 			"Search for Content: "
 		),
 		React.createElement("textarea", { id: "searchContent", name: "search", rows: "6", cols: "50", maxLength: "280", placeholder: "Type search here..." }),
+		React.createElement(
+			"label",
+			{ htmlFor: "limit" },
+			"Result Count: "
+		),
+		React.createElement(
+			"select",
+			{ id: "perPageSelect", name: "limit", form: "searchForm" },
+			React.createElement(
+				"option",
+				{ value: "5" },
+				"5"
+			),
+			React.createElement(
+				"option",
+				{ value: "10" },
+				"10"
+			),
+			React.createElement(
+				"option",
+				{ value: "20" },
+				"20"
+			),
+			React.createElement(
+				"option",
+				{ value: "50" },
+				"50"
+			)
+		),
 		React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
 		React.createElement("input", { className: "makePostSubmit", type: "submit", value: "Search Posts", onClick: closeModal2 }),
 		React.createElement(
 			"label",
-			{ id: "charLengthLabel" },
+			{ id: "charLengthLabelSearch" },
 			"Max Chars: 280"
 		)
 	);
@@ -101,39 +136,79 @@ var PostList = function PostList(props) {
 	}
 
 	var postNodes = props.posts.map(function (post) {
-		return React.createElement(
-			"div",
-			{ key: post._id, className: "post" },
-			React.createElement(
+		//Replace those strange special characters with their actual characters
+		var fixedPost = post.post.replace(/&#x27;/g, "'").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+
+		if (post.image) {
+			return React.createElement(
 				"div",
-				{ id: "postTitle" },
-				React.createElement("img", { src: "/assets/img/thoughtBubble.png", alt: "post icon", className: "domoFace" }),
+				{ key: post._id, className: "post" },
 				React.createElement(
-					"h3",
-					{ className: "postName" },
-					" Posted By: ",
-					post.poster,
-					" "
+					"div",
+					{ id: "postTitle" },
+					React.createElement("img", { src: "/assets/img/thoughtBubble.png", alt: "post icon", className: "domoFace" }),
+					React.createElement(
+						"h3",
+						{ className: "postName" },
+						" Posted By: ",
+						post.poster,
+						" "
+					)
+				),
+				React.createElement("br", null),
+				React.createElement(
+					"div",
+					{ id: "postedContent" },
+					React.createElement("img", { className: "postImage", src: post.image, alt: "Can't Find Image" }),
+					React.createElement(
+						"h3",
+						{ className: "postContent" },
+						fixedPost
+					)
+				),
+				React.createElement("br", null),
+				React.createElement(
+					"h5",
+					null,
+					" Posted At: ",
+					post.postDate
 				)
-			),
-			React.createElement("br", null),
-			React.createElement(
+			);
+		} else {
+			return React.createElement(
 				"div",
-				{ id: "postedContent" },
+				{ key: post._id, className: "post" },
 				React.createElement(
-					"h3",
-					{ className: "postContent" },
-					post.post
+					"div",
+					{ id: "postTitle" },
+					React.createElement("img", { src: "/assets/img/thoughtBubble.png", alt: "post icon", className: "domoFace" }),
+					React.createElement(
+						"h3",
+						{ className: "postName" },
+						" Posted By: ",
+						post.poster,
+						" "
+					)
+				),
+				React.createElement("br", null),
+				React.createElement(
+					"div",
+					{ id: "postedContent" },
+					React.createElement(
+						"h3",
+						{ className: "postContent" },
+						fixedPost
+					)
+				),
+				React.createElement("br", null),
+				React.createElement(
+					"h5",
+					null,
+					" Posted At: ",
+					post.postDate
 				)
-			),
-			React.createElement("br", null),
-			React.createElement(
-				"h5",
-				null,
-				" Posted At: ",
-				post.postDate
-			)
-		);
+			);
+		}
 	});
 
 	return React.createElement(
@@ -143,14 +218,68 @@ var PostList = function PostList(props) {
 	);
 };
 
-var loadPostsFromServer = function loadPostsFromServer() {
-	sendAjax('GET', '/getPosts', null, function (data) {
-		ReactDOM.render(React.createElement(PostList, { posts: data.posts }), document.querySelector("#posts"));
-	});
+var Navigation = function Navigation() {
+	return React.createElement(
+		"div",
+		null,
+		React.createElement(
+			"a",
+			{ href: "/login" },
+			React.createElement("img", { id: "logo", src: "/assets/img/face.png", alt: "face logo" })
+		),
+		React.createElement(
+			"div",
+			{ className: "navlink" },
+			React.createElement(
+				"a",
+				{ href: "/logout" },
+				"Log out"
+			)
+		),
+		React.createElement(
+			"div",
+			{ className: "navlink" },
+			React.createElement(
+				"a",
+				{ id: "changePassButton", href: "/changePassPage" },
+				"Change Password"
+			)
+		),
+		React.createElement(
+			"div",
+			{ className: "navlinkCurrent" },
+			React.createElement(
+				"a",
+				{ id: "postFeedButton", href: "/maker" },
+				"Post Feed"
+			)
+		)
+	);
 };
 
-var loadSearchFromServer = function loadSearchFromServer() {
-	sendAjax('POST', '/search', null, function (data) {
+var TitleSpace = function TitleSpace() {
+	return React.createElement(
+		"div",
+		{ id: "appTitle" },
+		React.createElement(
+			"h1",
+			null,
+			"Thought Poster!"
+		),
+		React.createElement(
+			"h4",
+			null,
+			React.createElement(
+				"i",
+				null,
+				"\"A place to share what's on your mind\""
+			)
+		)
+	);
+};
+
+var loadPostsFromServer = function loadPostsFromServer() {
+	sendAjax('GET', '/getPosts', null, function (data) {
 		ReactDOM.render(React.createElement(PostList, { posts: data.posts }), document.querySelector("#posts"));
 	});
 };
@@ -200,6 +329,10 @@ var setup = function setup(csrf) {
 	ReactDOM.render(React.createElement(SearchForm, { csrf: csrf }), document.querySelector("#searchModalContent"));
 
 	ReactDOM.render(React.createElement(PostList, { posts: [] }), document.querySelector("#posts"));
+
+	ReactDOM.render(React.createElement(Navigation, null), document.querySelector("#navigation"));
+
+	ReactDOM.render(React.createElement(TitleSpace, null), document.querySelector("#titleSpace"));
 
 	loadPostsFromServer();
 };

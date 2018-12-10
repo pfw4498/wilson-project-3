@@ -44,10 +44,41 @@ const ChangePassWindow = (props) => {
 	);
 };
 
+const Navigation = () => {
+	return (
+		<div>
+			<a href="/login"><img id="logo" src="/assets/img/face.png" alt="face logo"/></a>
+    		<div className="navlink"><a href="/logout">Log out</a></div>
+			<div className="navlinkCurrent"><a id="changePassButton" href="/changePassPage">Change Password</a>
+			</div>
+			<div className="navlink"><a id="postFeedButton" href="/maker">Post Feed</a></div>
+		</div>
+	);
+};
+
+const TitleSpace = () => {
+	return (
+		<div id="appTitle">
+			<h1>Thought Poster!</h1>
+			<h4><i>"A place to share what's on your mind"</i></h4>
+		</div>
+	);
+};
+
 const setup = function(csrf) {
 	ReactDOM.render(
 		<ChangePassWindow csrf={csrf} />,
 		document.querySelector("#content")
+	);
+	
+	ReactDOM.render(
+		<Navigation />,
+		document.querySelector("#navigation")
+	);
+	
+	ReactDOM.render(
+		<TitleSpace />,
+		document.querySelector("#titleSpace")
 	);
 };
 
