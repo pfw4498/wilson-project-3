@@ -87,7 +87,7 @@ const searchPosts = (request, response) => {
 			"$regex":search,
 			"$options":"i"
 		}
-	}, null, { limit: parseInt(req.body.limit) }).sort({_id:-1}).exec((err,docs) => {
+	}, null, { limit: parseInt(req.body.limit, 10) }).sort({_id:-1}).exec((err,docs) => {
 		if (err) {
 			console.log(err);
 			return res.status(400).json({ error: 'Could Not Return Search Results'});
